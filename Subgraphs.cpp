@@ -6,36 +6,6 @@
 
 using namespace std;
 
-vector<vector<int>> subgraphs(vector<vector<int>> adj){
-  unordered_set<int> visit;
-  vector<vector<int>> ans;
-  for(int i=0; i<adj.size(); i++)
-    visit.insert(i);
-  
-  while(!visit.empty()){
-    vector<int> subgraph;
-    int curr=*visit.begin();
-    stack<int> s;
-    s.push(curr);
-    visit.erase(curr);
-    //dfs for undirected graph
-    while(!s.empty()){
-      int top=s.top();
-      subgraph.push_back(top);
-      s.pop();
-      for(int i=0; i<adj[top].size(); i++){
-        int node = adj[top][i];
-        if(visit.find(node)!=visit.end()){
-          visit.erase(node);
-          s.push(node);
-        }
-      }
-    }
-    ans.push_back(subgraph);
-  }
-  return ans;
-}
-
 //undirected graph
 class Graph{
 public:
@@ -44,10 +14,31 @@ public:
     adj.resize(size);
   }
   void addEdge(int ori, int dest){
-    adj[ori-1].push_back(dest-1);
-    adj[dest-1].push_back(ori-1);
+    adj[ori].push_back(dest);
+    adj[dest].push_back(ori);
   }
 
+  void DFS(int curr, vector<int> &visited, vector<int> &path){
+    visited[curr]=1;
+    for(auto it=adj[curr].begin(); it!=adj[curr].end(); it++){
+      if(!visited[*it])
+        DFS(*it, visited, path);
+    }
+    path.push_back(curr);
+  }
+
+  vector<vector<int>> subgraphs(){
+    vector<int> visited(adj.size(),0);
+    vector<vector<int>> ans;
+    for(int i=0; i<adj.size(); i++){
+      if(!visited[i]){
+        vector<int> path;
+        DFS(i, visited, path);
+        ans.push_back(path);
+      }
+    }
+    return ans;
+  }  
 };
 
 // int subgraphs(vector<vector<int>> adj, vector<int> &subgraphs){
@@ -82,14 +73,16 @@ public:
 
 int main(){
   Graph graph = Graph(5);
-  graph.addEdge(1,2);
+  graph.addEdge(2,1);
+  graph.addEdge(1,0);
+  graph.addEdge(0,2);
+  graph.addEdge(0,3);
   graph.addEdge(3,4);
-  graph.addEdge(5,2);
 
-  vector<vector<int>> sub = subgraphs(graph.adj);
+  vector<vector<int>> sub = graph.subgraphs();
   for(int i=0; i<sub.size(); i++){
     for(int j=0; j<sub[i].size(); j++)
-      cout << sub[i][j]+1 << " ";
+      cout << sub[i][j] << " ";
     cout << endl;
   }
 
