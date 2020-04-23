@@ -36,6 +36,20 @@ vector<vector<int>> subgraphs(vector<vector<int>> adj){
   return ans;
 }
 
+//undirected graph
+class Graph{
+public:
+  vector<vector<int>> adj;
+  Graph(int size){
+    adj.resize(size);
+  }
+  void addEdge(int ori, int dest){
+    adj[ori-1].push_back(dest-1);
+    adj[dest-1].push_back(ori-1);
+  }
+
+};
+
 // int subgraphs(vector<vector<int>> adj, vector<int> &subgraphs){
 //   int ans=0;
 //   vector<int> visited(adj.size(),0);
@@ -67,21 +81,17 @@ vector<vector<int>> subgraphs(vector<vector<int>> adj){
 // }
 
 int main(){
-  vector<vector<int>> adj;
-  adj.push_back({1,2});
-  adj.push_back({2});
-  adj.push_back({0,1,4});
-  adj.push_back({5});
-  adj.push_back({2});
-  adj.push_back({});
+  Graph graph = Graph(5);
+  graph.addEdge(1,2);
+  graph.addEdge(3,4);
+  graph.addEdge(5,2);
 
-  vector<vector<int>> sub = subgraphs(adj);
-
-    for(int i=0; i<sub.size(); i++){
-      for(int j=0; j<sub[i].size(); j++)
-        cout << sub[i][j] << " ";
-      cout << endl;
-    }
+  vector<vector<int>> sub = subgraphs(graph.adj);
+  for(int i=0; i<sub.size(); i++){
+    for(int j=0; j<sub[i].size(); j++)
+      cout << sub[i][j]+1 << " ";
+    cout << endl;
+  }
 
   // vector<int> subgraph(adj.size(),0);
   // cout << subgraphs(adj, subgraph) << endl;

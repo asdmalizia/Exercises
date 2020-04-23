@@ -51,22 +51,13 @@ public:
 };
 
 
-int main(){
-  vector<vector<int>> adj;
-  // adj.push_back({1});
-  // adj.push_back({0,4});
-  // adj.push_back({3});
-  // adj.push_back({2});
-  // adj.push_back({1});
-
+int main(){  
   Graph graph = Graph(5);
   graph.addEdge(1,2);
   graph.addEdge(3,4);
   graph.addEdge(5,2);
 
-  adj = graph.adj;
-  vector<vector<int>> sub = subgraphs(adj);
-
+  vector<vector<int>> sub = subgraphs(graph.adj);
   for(int i=0; i<sub.size(); i++){
     for(int j=0; j<sub[i].size(); j++)
       cout << sub[i][j]+1 << " ";
